@@ -72,7 +72,7 @@ seuratProcV3 <- function(count.matrix, vars.to.regress=NULL, verbose=TRUE, n.pcs
     message("Running Seurat v3 workflow")
   }
   so <- Seurat::CreateSeuratObject(counts = count.matrix)
-  so <- Seurat::SCTransform(object = so, vars.to.regress = vars.to.regress, verbose = verbose)
+  so <- Seurat::SCTransform(object = so, vars.to.regress = vars.to.regress, verbose = verbose, variable.features.n = variable.features.n, conserve.memory = conserve.memory, n.cells = n.cells)
   so <- Seurat::RunPCA(object = so, npcs = n.pcs, verbose = verbose)
   if (cluster) {
     so <- Seurat::FindNeighbors(object = so, dims = 1:n.pcs, verbose = verbose)
@@ -244,7 +244,7 @@ saveConosForScanPy <- function(con, output.path, hdf5_filename, metadata.df=NULL
 #' @return Seurat object
 #'
 #' @export
-basicSeuratProc <- function(count.matrix, vars.to.regress=NULL, verbose=TRUE, do.par=TRUE, n.pcs=100, cluster=TRUE, tsne=TRUE, umap=FALSE) {
+basicSeuratProc <- function(count.matrix, vars.to.regress=NULL, verbose=TRUE, do.par=TRUE, n.pcs=100, cluster=TRUE, tsne=TRUE, umap=FALSE, ...) {
   if (!requireNamespace("Seurat", quietly = TRUE)) {
     stop("Package \"Seurat\" is needed for this function to work. Please install it, as described here: <https://satijalab.org/seurat/articles/install.html>.", call. = FALSE)
   }
@@ -261,7 +261,8 @@ basicSeuratProc <- function(count.matrix, vars.to.regress=NULL, verbose=TRUE, do
     n.pcs = n.pcs,
     cluster = cluster,
     tsne = tsne,
-    umap = umap
+    umap = umap, 
+    ...
   )
 }
 
